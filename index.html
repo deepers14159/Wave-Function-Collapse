@@ -5,6 +5,7 @@
   <title>Gen3</title>
   <script src="create.js"></script>
   <script src="draw.js"></script>
+  <script src="utility.js"></script>
   <script type="text/javascript">
 
     var ctx;
@@ -22,38 +23,10 @@
     var mouseY;
     var size = {x : 0, y : 0, px : 10};
 
-    const UP = "up";
-    const DOWN = "down";
-    const LEFT = "left";
-    const RIGHT = "right";
+    var rawSource = [["#333333", "#FFFFFF", "#333333"],
+                    ["#FFFFFF", "#FFFFFF", "#FFFFFF"],
+                    ["#333333", "#FFFFFF", "#333333"]];
 
-    var map = [];
-    var rawSource = [["#333333", "#333333", "#333333", "#333333", "#333333"],
-                  ["#333333", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#333333"],
-                  ["#333333", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#333333"],
-                  ["#333333", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#333333"],
-                  ["#333333", "#333333", "#333333", "#333333", "#333333"]];
-    var source = [];
-
-    var color2id = {};
-    var id2weight = {};
-    var rules = [];
-
-    function isVaid(coord)
-    {
-      if(coord.x >= 0 && coord.x < size.x)
-        if(coord.y >= 0 && coord.y < size.y)
-          return true;
-      return false;
-    }
-    function setMap(coord, value)
-    {
-      map[coord.x][coord.y] = value;
-    }
-    function getMap(coord)
-    {
-      return map[coord.x][coord.y];
-    }
     document.onkeydown =
     function mRect(e)
     {

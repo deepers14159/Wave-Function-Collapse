@@ -1,3 +1,5 @@
+var dmap = [];
+
 function draw()
 {
   reset();
@@ -23,15 +25,17 @@ function drawWorld()
     for(var j = 0; j<size.y;j++)
     {
       if(map[i][j] == 0)
-      ctx.fillStyle = "#3333ff";
+        ctx.fillStyle = "#3333ff";
       else if(map[i][j] == 1)
-      ctx.fillStyle = "#00F000";
+        ctx.fillStyle = "#00F000";
       else if(map[i][j] == 2)
-      ctx.fillStyle = "#FFFF00";
+        ctx.fillStyle = "#FFFF00";
       else if(map[i][j] == 3)
-      ctx.fillStyle = "#999999";
+        ctx.fillStyle = "#999999";
       else if(map[i][j] == -1)
-      ctx.fillStyle = "#0000e6";
+        ctx.fillStyle = "#0000e6";
+      else
+        ctx.fillStyle = "#3333ff";
       ctx.fillRect(i*size.px, j*size.px, size.px, size.px);
 
       /*

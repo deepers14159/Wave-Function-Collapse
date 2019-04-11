@@ -2,23 +2,56 @@ function create()
 {
   initMap();
   initSourceDictionary();
+  initRules();
+
+  initMap2();
 }
-function initMap()
+function initMap2()
 {
-  size.x = Math.round(canvasW/size.px);
-  size.y = Math.round(canvasH/size.px);
   for(var i = 0; i<size.x; i++)
   {
-    map[i] = [];
-    for(var j = 0; j<size.y;j++)
+    for(var j = 0; j<size.y; j++)
     {
-      map[i][j] = 0;
+      map[i][j] = [];
+      for(var k = 0; k < numTiles; k++)
+      {
+        map[i][j][k] = true;
+      }
     }
   }
 }
 function initRules()
 {
-  
+  for(var i = 0; i < source.length; i++)
+  {
+    for(var j = 0; j < source[0].length; j++)
+    {
+      if(isVaidSource(getMovedCoordSource(getCoord(i, j), UP)))
+      {
+        tempRule = new Rule(getSource(getCoord(i,j)), getSource(getMovedCoordSource(getCoord(i, j), UP)), UP);
+        if(!(rule2string(tempRule) in rules))
+          rules[rule2string(tempRule)] = tempRule;
+      }
+      if(isVaidSource(getMovedCoordSource(getCoord(i, j), DOWN)))
+      {
+        tempRule = new Rule(getSource(getCoord(i,j)), getSource(getMovedCoordSource(getCoord(i, j), DOWN)), DOWN);
+        if(!(rule2string(tempRule) in rules))
+          rules[rule2string(tempRule)] = tempRule;
+      }
+      if(isVaidSource(getMovedCoordSource(getCoord(i, j), LEFT)))
+      {
+        tempRule = new Rule(getSource(getCoord(i,j)), getSource(getMovedCoordSource(getCoord(i, j), LEFT)), LEFT);
+        if(!(rule2string(tempRule) in rules))
+          rules[rule2string(tempRule)] = tempRule;
+      }
+      if(isVaidSource(getMovedCoordSource(getCoord(i, j), RIGHT)))
+      {
+        tempRule = new Rule(getSource(getCoord(i,j)), getSource(getMovedCoordSource(getCoord(i, j), RIGHT)), RIGHT);
+        if(!(rule2string(tempRule) in rules))
+          rules[rule2string(tempRule)] = tempRule;
+      }
+    }
+  }
 }
 function initSourceDictionary()
 {
@@ -39,6 +72,20 @@ function initSourceDictionary()
       source[i][j] = color2id[rawSource[i][j]];
     }
   }
-  for(var i = 0; i < Object.keys(id2weight).length; i++)
+  numTiles = Object.keys(id2weight).length;
+  for(var i = 0; i < numTiles; i++)
     id2weight[i] /= rawSource.length*rawSource[0].length;
+}
+function initMap()
+{
+  size.x = Math.round(canvasW/size.px);
+  size.y = Math.round(canvasH/size.px);
+  for(var i = 0; i<size.x; i++)
+  {
+    map[i] = [];
+    for(var j = 0; j<size.y;j++)
+    {
+      map[i][j] = 0;
+    }
+  }
 }
