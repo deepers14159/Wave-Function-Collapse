@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <title>Gen3</title>
+  <script src="create.js"></script>
+  <script src="draw.js"></script>
+  <script type="text/javascript">
+
+    var ctx;
+    var fps = 10;
+    var updateLoop;
+    var canvasH;
+    var canvasW;
+    var up = false;
+    var down = false;
+    var left = false;
+    var right = false;
+    var space = false;
+    var mouse = false;
+    var mouseX;
+    var mouseY;
+    var size = {x : 0, y : 0, px : 10};
+
+    const UP = "up";
+    const DOWN = "down";
+    const LEFT = "left";
+    const RIGHT = "right";
+
+    var map = [];
+    var rawSource = [["#333333", "#333333", "#333333", "#333333", "#333333"],
+                  ["#333333", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#333333"],
+                  ["#333333", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#333333"],
+                  ["#333333", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#333333"],
+                  ["#333333", "#333333", "#333333", "#333333", "#333333"]];
+    var source = [];
+
+    var color2id = {};
+    var id2weight = {};
+    var rules = [];
+
+    function isVaid(coord)
+    {
+      if(coord.x >= 0 && coord.x < size.x)
+        if(coord.y >= 0 && coord.y < size.y)
+          return true;
+      return false;
+    }
+    function setMap(coord, value)
+    {
+      map[coord.x][coord.y] = value;
+    }
+    function getMap(coord)
+    {
+      return map[coord.x][coord.y];
+    }
+    document.onkeydown =
+    function mRect(e)
+    {
+      e = e || window.event;
+
+      if (e.keyCode == '68' )
+      {
+        right = true;
+      }
+
+      if (e.keyCode == '65' )
+      {
+        left = true;
+      }
+      if (e.keyCode == '83' )
+      {
+        up = true;
+      }
+      if (e.keyCode == '87' )
+      {
+        down = true;
+      }
+      if (e.keyCode == '32' )
+      {
+        space = true;
+        location.reload();
+      }
+    }
+    document.onkeyup =
+    function mRect(e)
+    {
+      e = e || window.event;
+      if (e.keyCode == '68' )
+      {
+        right = false;
+      }
+
+      if (e.keyCode == '65' )
+      {
+        left = false;
+      }
+      if (e.keyCode == '83' )
+      {
+        up = false;
+      }
+
+      if (e.keyCode == '87' )
+      {
+        down = false;
+      }
+      if (e.keyCode == '32' )
+      {
+        space = false;
+      }
+    }
+    function sizeAdjust()
+    {
+      canvas = document.getElementById("mycanvas");
+      canvasW = window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth;
+      canvasH = window.innerHeight
+      || document.documentElement.clientHeight
+      || document.body.clientHeight;
+      canvasH = canvasH - 15;
+      canvasW = canvasW - 5;
+      canvasH = canvasH - (canvasH % 2);
+      canvasW = canvasW - (canvasW % 2);
+      if(canvasW > 1500)
+      canvasW = 1500;
+      if(canvasH > 800)
+      canvasH = 800;
+      if(canvas.width != canvasW)
+      {
+        canvas.width = canvasW;
+      }
+      if(canvas.height != canvasH)
+      {
+        canvas.height = canvasH;
+      }
+    }
+
+    window.onload =
+    function Game()
+    {
+      sizeAdjust();
+      document.body.style.marginTop = 0;
+      document.body.style.marginLeft = 0;
+      document.body.style.marginBottom = 0;
+      document.body.style.marginUp = 0;
+
+      this.ctx = document.getElementById("mycanvas").getContext("2d");
+      create();
+      draw();
+      updateLoop = setInterval(function() {sizeAdjust();} , 1000/fps);
+    }
+    document.onmousedown =
+    function mousedown(e)
+    {
+      e = e || window.event;
+      mouse = true;
+    }
+    document.onmouseup =
+    function mouseup(e)
+    {
+      e = e || window.event;
+      mouse = false;
+    }
+    window.addEventListener('mousemove', function (e) {
+      canvas = document.getElementById("mycanvas");
+      mouseX = e.pageX;
+      mouseY = e.pageY;
+    })
+  </script>
+</head>
+<body style="background-color:black" >
+  <canvas id="mycanvas"  height="600" width="500" ></canvas>
+</body>
+</html>
