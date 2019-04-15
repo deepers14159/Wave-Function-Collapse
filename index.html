@@ -9,7 +9,7 @@
   <script type="text/javascript">
 
     var ctx;
-    var fps = 10;
+    var fps = 30;
     var updateLoop;
     var canvasH;
     var canvasW;
@@ -21,11 +21,11 @@
     var mouse = false;
     var mouseX;
     var mouseY;
-    var size = {x : 0, y : 0, px : 10};
+    var size = {x : 0, y : 0, px : 30};
 
-    var rawSource = [["#333333", "#FFFFFF", "#333333"],
-                    ["#FFFFFF", "#FFFFFF", "#FFFFFF"],
-                    ["#333333", "#FFFFFF", "#333333"]];
+    var rawSource = [["#FF00FF", "#009999", "#333333"],
+                    ["#FF00FF", "#009999", "#333333"],
+                    ["#FF00FF", "#009999", "#333333"]];
 
     document.onkeydown =
     function mRect(e)
@@ -121,7 +121,7 @@
       this.ctx = document.getElementById("mycanvas").getContext("2d");
       create();
       draw();
-      updateLoop = setInterval(function() {sizeAdjust();} , 1000/fps);
+      updateLoop = setInterval(function() {update();} , 1000/fps);
     }
     document.onmousedown =
     function mousedown(e)
