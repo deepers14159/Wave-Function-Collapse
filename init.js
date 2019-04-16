@@ -23,10 +23,13 @@ function initRules()
   {
     for(var j = 0; j < source[0].length; j++)
     {
-      rules[UP][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), UP))]++;
-      rules[DOWN][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), DOWN))]++;
-      rules[LEFT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), LEFT))]++;
-      rules[RIGHT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), RIGHT))]++;
+      for(var r = 0; r < 4; r++)
+      {
+        rules[UP][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
+        rules[DOWN][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
+        rules[LEFT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
+        rules[RIGHT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
+      }
     }
   }
   var count;
