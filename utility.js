@@ -10,11 +10,12 @@ var source = [];
 var color2id = {};
 var id2color = {};
 var id2weight = {};
-var rules = {};
+
+var rules = [];
 
 var numTiles = 0;
 
-
+//GENERAL
 function floatEquals(x, y, error)
 {
   if(Math.abs(x - y) < error)
@@ -22,25 +23,27 @@ function floatEquals(x, y, error)
   return false;
 }
 function getRandOnDistribution(dist)
+{
+  var sum = 0;
+
+   for(var i = 0; i < dist.length; i++)
+      sum += dist[i];
+
+  var rand = Math.random()*sum;
+
+  var count = 0;
+  var checker = dist[0];
+
+  while(rand > checker)
   {
-      var sum = 0;
-
-       for(var i = 0; i < dist.length; i++)
-          sum += dist[i];
-
-      var rand = Math.random()*sum;
-
-      var count = 0;
-      var checker = dist[0];
-
-      while(rand > checker)
-          {
-              count++;
-              checker += dist[count];
-          }
-
-      return count;
+    count++;
+    checker += dist[count];
   }
+
+  return count;
+}
+
+//COLOR STUFF
 function rgb2string(color)
 {
   out = "#";
@@ -73,6 +76,8 @@ function decimal2hexchar(decimal)
     return String.fromCharCode(decimal +  "0".charCodeAt(0));
   return String.fromCharCode(decimal + "A".charCodeAt(0)-10);
 }
+
+//FOR MAP
 function getCoord(i, j)
 {
   var coord = {x : i, y : j};
@@ -114,13 +119,6 @@ function isVaid(coord)
       return true;
   return false;
 }
-function isVaidSource(coord)
-{
-  if(coord.x >= 0 && coord.x < source.length)
-    if(coord.y >= 0 && coord.y < source[0].length)
-      return true;
-  return false;
-}
 function setMap(coord, id, value)
 {
   if(!isVaid(coord))
@@ -133,20 +131,43 @@ function getMap(coord, id)
     return null;
   return map[coord.x][coord.y][id];
 }
+
+// FOR SOURCE
 function getMovedCoordSource(coord, direction)
 {
   tempCoord = {x : coord.x, y : coord.y};
-
   if(direction == UP)
-    tempCoord.x-=1;
+      {
+          tempCoord.x-=1;
+          tempCoord.x+=source.length;
+          tempCoord.x%=source.length;
+      }
   if(direction == DOWN)
-    tempCoord.x+=1;
+      {
+          tempCoord.x+=1;
+          tempCoord.x+=source.length;
+          tempCoord.x%=source.length;
+      }
   if(direction == LEFT)
-    tempCoord.y+=1;
+      {
+          tempCoord.y+=1;
+          tempCoord.y+=source[0].length;
+          tempCoord.y%=source[0].length;
+      }
   if(direction == RIGHT)
-    tempCoord.y-=1;
-
+      {
+          tempCoord.y-=1;
+          tempCoord.y+=source[0].length;
+          tempCoord.y%=source[0].length;
+      }
   return tempCoord;
+}
+function isVaidSource(coord)
+{
+  if(coord.x >= 0 && coord.x < source.length)
+    if(coord.y >= 0 && coord.y < source[0].length)
+      return true;
+  return false;
 }
 function getSource(coord)
 {

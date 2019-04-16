@@ -6,33 +6,47 @@ function init()
 }
 function initRules()
 {
+  rules = [];
+  for(var i = 0; i < 4; i++)
+  {
+    rules[i] = [];
+    for(var j = 0; j < numTiles; j++)
+    {
+      rules[i][j] = [];
+      for(var k = 0; k < numTiles; k++)
+      {
+        rules[i][j][k] = 0;
+      }
+    }
+  }
   for(var i = 0; i < source.length; i++)
   {
     for(var j = 0; j < source[0].length; j++)
     {
-      if(isVaidSource(getMovedCoordSource(getCoord(i, j), UP)))
+      rules[UP][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), UP))]++;
+      rules[DOWN][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), DOWN))]++;
+      rules[LEFT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), LEFT))]++;
+      rules[RIGHT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), RIGHT))]++;
+    }
+  }
+  var count;
+  for(var i = 0; i < 4; i++)
+  {
+    for(var j = 0; j < numTiles; j++)
+    {
+      count = 0;
+      for(var k = 0; k < numTiles; k++)
       {
-        tempRule = new Rule(getSource(getCoord(i,j)), getSource(getMovedCoordSource(getCoord(i, j), UP)), UP);
-        if(!(rule2string(tempRule) in rules))
-          rules[rule2string(tempRule)] = tempRule;
+        count += rules[i][j][k];
       }
-      if(isVaidSource(getMovedCoordSource(getCoord(i, j), DOWN)))
+      if(count == 0)
       {
-        tempRule = new Rule(getSource(getCoord(i,j)), getSource(getMovedCoordSource(getCoord(i, j), DOWN)), DOWN);
-        if(!(rule2string(tempRule) in rules))
-          rules[rule2string(tempRule)] = tempRule;
+        console.log("RULE FAIL - There is a color with no surrounding tiles.");
+        continue;
       }
-      if(isVaidSource(getMovedCoordSource(getCoord(i, j), LEFT)))
+      for(var k = 0; k < numTiles; k++)
       {
-        tempRule = new Rule(getSource(getCoord(i,j)), getSource(getMovedCoordSource(getCoord(i, j), LEFT)), LEFT);
-        if(!(rule2string(tempRule) in rules))
-          rules[rule2string(tempRule)] = tempRule;
-      }
-      if(isVaidSource(getMovedCoordSource(getCoord(i, j), RIGHT)))
-      {
-        tempRule = new Rule(getSource(getCoord(i,j)), getSource(getMovedCoordSource(getCoord(i, j), RIGHT)), RIGHT);
-        if(!(rule2string(tempRule) in rules))
-          rules[rule2string(tempRule)] = tempRule;
+        rules[i][j][k] /= count;
       }
     }
   }
@@ -68,10 +82,11 @@ function initMap()
   size.y = Math.round(canvasH/size.px);
   for(var i = 0; i<size.x; i++)
   {
-    mapSet[i] = [];
+    map[i] = [];
     for(var j = 0; j<size.y; j++)
     {
-      map[i][j] = newTile();
+      map[i][j] = new Tile();
+      map[i][j].setDistribution(id2weight);
     }
   }
 }
