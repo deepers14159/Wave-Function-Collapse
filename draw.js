@@ -24,7 +24,7 @@ function drawWorld()
   {
     for(var j = 0; j<size.y;j++)
     {
-      ctx.fillStyle = getColorAverage(map[i][j]);
+      ctx.fillStyle = map[i][j].getColorAverage();
       ctx.fillRect(i*size.px, j*size.px, size.px, size.px);
 
       /*

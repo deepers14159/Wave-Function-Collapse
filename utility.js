@@ -1,7 +1,7 @@
-const UP = "up";
-const DOWN = "down";
-const LEFT = "left";
-const RIGHT = "right";
+const UP = 0;
+const DOWN = 1;
+const LEFT = 2;
+const RIGHT = 3;
 
 var map = [];
 var mapSet = [];
@@ -12,7 +12,8 @@ var id2color = {};
 var id2weight = {};
 var rules = {};
 
-var numTiles;
+var numTiles = 0;
+
 
 function floatEquals(x, y, error)
 {
@@ -20,27 +21,6 @@ function floatEquals(x, y, error)
     return true;
   return false;
 }
-function getEntropy(isUsed)
-{
-  var sum_of_weights = 0;
-  var sum_of_weighted_weights = 0;
-  var count = 0;
-
-  for(var i = 0; i < numTiles; i++)
-  {
-    if(isUsed[i])
-    {
-      sum_of_weights += id2weight[i];
-      sum_of_weighted_weights += id2weight[i] * Math.log(id2weight[i]);
-      count++;
-    }
-  }
-
-  if(count == 0)
-    return -1;
-  return Math.log(sum_of_weights) - sum_of_weighted_weights/sum_of_weights;
-}
-
 function getRandOnDistribution(dist)
   {
       var sum = 0;
@@ -61,33 +41,6 @@ function getRandOnDistribution(dist)
 
       return count;
   }
-
-function getColorAverage(isUsed)
-{
-  var count = 0;
-  var colorAvg = {r : 0, g : 0, b : 0};
-  var tempColor;
-  for(var i = 0; i < numTiles; i++)
-  {
-    if(isUsed[i])
-    {
-      //console.log(i);
-      //console.log(id2color[i]);
-      //console.log(string2rgb(id2color[i]));
-
-      tempColor = string2rgb(id2color[i]);
-      colorAvg.r += tempColor.r;
-      colorAvg.g += tempColor.g;
-      colorAvg.b += tempColor.b;
-      count++;
-    }
-  }
-  colorAvg.r = Math.round(colorAvg.r/count);
-  colorAvg.g = Math.round(colorAvg.g/count);
-  colorAvg.b = Math.round(colorAvg.b/count);
-
-  return rgb2string(colorAvg);
-}
 function rgb2string(color)
 {
   out = "#";
@@ -119,19 +72,6 @@ function decimal2hexchar(decimal)
   if(decimal >= 0 && decimal <=9)
     return String.fromCharCode(decimal +  "0".charCodeAt(0));
   return String.fromCharCode(decimal + "A".charCodeAt(0)-10);
-}
-
-class Rule {
-  constructor(a, b, direction)
-  {
-    this.a = a;
-    this.b = b;
-    this.direction = direction;
-  }
-}
-function rule2string(rule)
-{
-  return rule.a + " " + rule.b + " " + rule.direction;
 }
 function getCoord(i, j)
 {

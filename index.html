@@ -6,6 +6,8 @@
   <script src="create.js"></script>
   <script src="draw.js"></script>
   <script src="utility.js"></script>
+  <script src="tile.js"></script>
+  <script src="init.js"></script>
   <script type="text/javascript">
 
     var ctx;
@@ -23,9 +25,9 @@
     var mouseY;
     var size = {x : 0, y : 0, px : 30};
 
-    var rawSource = [["#FF00FF", "#009999", "#333333"],
-                    ["#FF00FF", "#009999", "#333333"],
-                    ["#FF00FF", "#009999", "#333333"]];
+    var rawSource = [["#FF00FF", "#FF00FF", "#009999", "#333333", "#333333"],
+                    ["#FF00FF", "#FF00FF", "#009999", "#333333", "#333333"],
+                    ["#FF00FF", "#FF00FF", "#009999", "#333333", "#333333"]];
 
     document.onkeydown =
     function mRect(e)
@@ -119,8 +121,7 @@
       document.body.style.marginUp = 0;
 
       this.ctx = document.getElementById("mycanvas").getContext("2d");
-      create();
-      draw();
+      init();
       updateLoop = setInterval(function() {update();} , 1000/fps);
     }
     document.onmousedown =
