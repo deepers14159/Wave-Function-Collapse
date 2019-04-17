@@ -1,24 +1,34 @@
-var numCompleted;
-
-function create()
-{
-  initMap();
-  initSourceDictionary();
-  initRules();
-
-  initMap2();
-
-  //while(numCompleted != size.x * size.y)
-  //{
-  //for(var i = 0; i < 100; i++)
-
-  //}
-}
+var finished;
 function update()
 {
   sizeAdjust();
-  updateOnePixel();
+  runChecks();
+
+  //console.log("checking..");
+
+  if(!finished)
+  {
+    updateOnePixel();
+    //console.log("running...");
+  }
   draw();
+}
+function runChecks()
+{
+  finished = true;
+  for(var i = 0; i<size.x; i++)
+  {
+    for(var j = 0; j<size.y; j++)
+    {
+      finished = finished && (map[i][j].checkSet());
+      if(map[i][j].checkContradition())
+      {
+        clearInterval(updateLoop);
+        finished = true;
+        console.log("EXCEPTION");
+      }
+    }
+  }
 }
 function updateOnePixel()
 {
@@ -34,20 +44,28 @@ function collaspe(coord)
 {
   var dist = [];
   var realVal;
+
+  realVal = getRandOnDistribution(map[coord.x][coord.y].dist);
+
   for(var i = 0; i < numTiles; i++)
   {
-    dist[i] = 0;
-    if(map[coord.x][coord.y][i] == true)
-      dist[i] = id2weight[i];
-  }
-  realVal = getRandOnDistribution(dist);
-  for(var i = 0; i < numTiles; i++)
-  {
-    map[coord.x][coord.y][i] = false;
+    map[coord.x][coord.y].dist[i] = 0;
     if(i == realVal)
-      map[coord.x][coord.y][i] = true;
+      map[coord.x][coord.y].dist[i] = 1;
   }
 
+  map[coord.x][coord.y].checkSet();
+
+  var uc = getMovedCoord(coord, UP);
+  map[uc.x][uc.y].updateDist(rules[UP][realVal]);
+  uc = getMovedCoord(coord, DOWN);
+  map[uc.x][uc.y].updateDist(rules[DOWN][realVal])
+  uc = getMovedCoord(coord, LEFT);
+  map[uc.x][uc.y].updateDist(rules[LEFT][realVal])
+  uc = getMovedCoord(coord, RIGHT);
+  map[uc.x][uc.y].updateDist(rules[RIGHT][realVal])
+
+/*
   mapSet[coord.x][coord.y] = true;
 
   upspot = [];
@@ -122,40 +140,24 @@ function collaspe(coord)
   original = [false, true, true, false] //false is already taken count
   newc = [false, true, true] // set org array to false, make all the rules to true
   //take the union of the falses
+  */
 }
 function getLowestEntropy()
 {
   var numSame = 0;
-  var currentEntropy = -1;
+  var currentEntropy = 100000;
   var currentCoord = {x : 0, y : 0};
-
-  for(var i = 0; i<size.x; i++)
-  {
-    for(var j = 0; j<size.y; j++)
-    {
-      currentEntropy = getEntropy(map[i][j]);
-      currentCoord.x = i;
-      currentCoord.y = j;
-      if(mapSet[i][j] == false)
-        break;
-    }
-  }
-  if(currentEntropy == -1)
-    return {x : -1, y : -1};
-
   var entropyij;
 
+  mapEntropy = [];
   for(var i = 0; i<size.x; i++)
   {
     mapEntropy[i] = [];
 
     for(var j = 0; j<size.y; j++)
     {
-      mapEntropy[i][j] = getEntropy(map[i][j]);
-      if(mapSet[i][j] == true)
-        continue;
-
-      entropyij = getEntropy(map[i][j]);
+      mapEntropy[i][j] = map[i][j].getEntropy();
+      entropyij = map[i][j].getEntropy();;
 
       if(entropyij < currentEntropy)
       {
@@ -165,7 +167,7 @@ function getLowestEntropy()
         currentCoord.y = j;
       }
 
-      if(floatEquals(entropyij, currentEntropy, 0.000001))
+      if(floatEquals(entropyij, currentEntropy, 0.0000000000001))
       {
         numSame++;
         if(Math.random() < 1 / (numSame +1))
@@ -179,94 +181,4 @@ function getLowestEntropy()
   }
   //console.log(currentCoord);
   return currentCoord;
-}
-function initMap2()
-{
-  for(var i = 0; i<size.x; i++)
-  {
-    mapSet[i] = [];
-    for(var j = 0; j<size.y; j++)
-    {
-      map[i][j] = [];
-      mapSet[i][j] = false;
-      for(var k = 0; k < numTiles; k++)
-      {
-        map[i][j][k] = true;
-      }
-    }
-  }
-  numCompleted = 0;
-  if(numTiles == 1)
-    numCompleted = size.x * size.y;
-}
-function initRules()
-{
-  for(var i = 0; i < source.length; i++)
-  {
-    for(var j = 0; j < source[0].length; j++)
-    {
-      if(isVaidSource(getMovedCoordSource(getCoord(i, j), UP)))
-      {
-        tempRule = new Rule(getSource(getCoord(i,j)), getSource(getMovedCoordSource(getCoord(i, j), UP)), UP);
-        if(!(rule2string(tempRule) in rules))
-          rules[rule2string(tempRule)] = tempRule;
-      }
-      if(isVaidSource(getMovedCoordSource(getCoord(i, j), DOWN)))
-      {
-        tempRule = new Rule(getSource(getCoord(i,j)), getSource(getMovedCoordSource(getCoord(i, j), DOWN)), DOWN);
-        if(!(rule2string(tempRule) in rules))
-          rules[rule2string(tempRule)] = tempRule;
-      }
-      if(isVaidSource(getMovedCoordSource(getCoord(i, j), LEFT)))
-      {
-        tempRule = new Rule(getSource(getCoord(i,j)), getSource(getMovedCoordSource(getCoord(i, j), LEFT)), LEFT);
-        if(!(rule2string(tempRule) in rules))
-          rules[rule2string(tempRule)] = tempRule;
-      }
-      if(isVaidSource(getMovedCoordSource(getCoord(i, j), RIGHT)))
-      {
-        tempRule = new Rule(getSource(getCoord(i,j)), getSource(getMovedCoordSource(getCoord(i, j), RIGHT)), RIGHT);
-        if(!(rule2string(tempRule) in rules))
-          rules[rule2string(tempRule)] = tempRule;
-      }
-    }
-  }
-}
-function initSourceDictionary()
-{
-  for(var i = 0; i < rawSource.length; i++)
-  {
-    source[i] = [];
-    for(var j = 0; j < rawSource[0].length; j++)
-    {
-      //console.log(rawSource[i][j]);
-      //console.log(!(rawSource[i][j] in color2id));
-      if(!(rawSource[i][j] in color2id))
-      {
-        color2id[rawSource[i][j]] = Object.keys(color2id).length;
-        id2color[Object.keys(color2id).length-1] = rawSource[i][j];
-
-        id2weight[color2id[rawSource[i][j]]] = 1;
-      }
-      else
-        id2weight[color2id[rawSource[i][j]]]++;
-      source[i][j] = color2id[rawSource[i][j]];
-    }
-  }
-  numTiles = Object.keys(id2weight).length;
-  for(var i = 0; i < numTiles; i++)
-    id2weight[i] /= rawSource.length*rawSource[0].length;
-}
-function initMap()
-{
-  size.x = Math.round(canvasW/size.px);
-  size.y = Math.round(canvasH/size.px);
-  for(var i = 0; i<size.x; i++)
-  {
-    map[i] = [];
-    for(var j = 0; j<size.y;j++)
-    {
-      map[i][j] = 0;
-    }
-  }
 }

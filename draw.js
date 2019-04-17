@@ -24,15 +24,16 @@ function drawWorld()
   {
     for(var j = 0; j<size.y;j++)
     {
-      ctx.fillStyle = getColorAverage(map[i][j]);
+      ctx.fillStyle = map[i][j].getColorAverage();
       ctx.fillRect(i*size.px, j*size.px, size.px, size.px);
 
-      /*
+
       ctx.font = '15px Verdana';
       ctx.fillStyle = "#FFFFFF";
-      if(Math.round(mouseX/size.px) == i && Math.round(mouseY/size.px) == j)
-      ctx.fillText(valueAt(i,j),i*size.px-5, j*size.px-5);
-      */
+      //if(Math.round(mouseX/size.px) == i && Math.round(mouseY/size.px) == j)
+      //ctx.fillText(i + " " + j, i*size.px + 5, j*size.px + size.px/2 - 5);
+      //ctx.fillText(map[i][j].getEntropy(), i*size.px + 5, j*size.px + size.px/2 + 15);
+
     }
   }
 }
