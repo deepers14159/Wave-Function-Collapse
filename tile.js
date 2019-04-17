@@ -20,7 +20,9 @@ class Tile
     if(this.set)
       return;
     for(var i = 0; i < numTiles; i++)
-      this.dist[i] *= cond[i];
+      if(floatEquals(cond[i], 0, 0.00001))
+        this.dist[i] = 0;
+      //this.dist[i] *= cond[i];
   }
   getEntropy()
   {
