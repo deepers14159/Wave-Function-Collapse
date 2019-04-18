@@ -133,32 +133,32 @@ function getMap(coord, id)
 }
 
 // FOR SOURCE
-function getMovedCoordSource(coord, direction)
+function getMovedCoordSource(n, coord, direction)
 {
   tempCoord = {x : coord.x, y : coord.y};
   if(direction == UP)
       {
           tempCoord.x-=1;
-          tempCoord.x+=source.length;
-          tempCoord.x%=source.length;
+          tempCoord.x+=source[n].length;
+          tempCoord.x%=source[n].length;
       }
   if(direction == DOWN)
       {
           tempCoord.x+=1;
-          tempCoord.x+=source.length;
-          tempCoord.x%=source.length;
+          tempCoord.x+=source[n].length;
+          tempCoord.x%=source[n].length;
       }
   if(direction == LEFT)
       {
           tempCoord.y+=1;
-          tempCoord.y+=source[0].length;
-          tempCoord.y%=source[0].length;
+          tempCoord.y+=source[n][0].length;
+          tempCoord.y%=source[n][0].length;
       }
   if(direction == RIGHT)
       {
           tempCoord.y-=1;
-          tempCoord.y+=source[0].length;
-          tempCoord.y%=source[0].length;
+          tempCoord.y+=source[n][0].length;
+          tempCoord.y%=source[n][0].length;
       }
   return tempCoord;
 }
@@ -169,7 +169,7 @@ function isVaidSource(coord)
       return true;
   return false;
 }
-function getSource(coord)
+function getSource(n, coord)
 {
-  return source[coord.x][coord.y];
+  return source[n][coord.x][coord.y];
 }
