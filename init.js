@@ -19,23 +19,26 @@ function initRules()
       }
     }
   }
-  for(var i = 0; i < source.length; i++)
+  for(var n = 0; n < source.length; n++)
   {
-    for(var j = 0; j < source[0].length; j++)
+    for(var i = 0; i < source[n].length; i++)
     {
-      /*
-      for(var r = 0; r < 4; r++)
+      for(var j = 0; j < source[n][i].length; j++)
       {
-        rules[UP][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
-        rules[DOWN][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
-        rules[LEFT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
-        rules[RIGHT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
+        /*
+        for(var r = 0; r < 4; r++)
+        {
+          rules[UP][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
+          rules[DOWN][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
+          rules[LEFT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
+          rules[RIGHT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
+        }
+        */
+        rules[UP][getSource(n, getCoord(i,j))][getSource(n, getMovedCoordSource(n, getCoord(i, j), UP))]++;
+        rules[DOWN][getSource(n, getCoord(i,j))][getSource(n, getMovedCoordSource(n, getCoord(i, j), DOWN))]++;
+        rules[LEFT][getSource(n, getCoord(i,j))][getSource(n, getMovedCoordSource(n, getCoord(i, j), LEFT))]++;
+        rules[RIGHT][getSource(n, getCoord(i,j))][getSource(n, getMovedCoordSource(n, getCoord(i, j), RIGHT))]++;
       }
-      */
-      rules[UP][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), UP))]++;
-      rules[DOWN][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), DOWN))]++;
-      rules[LEFT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), LEFT))]++;
-      rules[RIGHT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), RIGHT))]++;
     }
   }
   var count;
@@ -62,28 +65,34 @@ function initRules()
 }
 function initSourceDictionary()
 {
-  for(var i = 0; i < rawSource.length; i++)
+  var count = 0;
+  for(var n = 0; n < rawSource.length; n++)
   {
-    source[i] = [];
-    for(var j = 0; j < rawSource[0].length; j++)
+    source[n] = [];
+    for(var i = 0; i < rawSource[n].length; i++)
     {
-      //console.log(rawSource[i][j]);
-      //console.log(!(rawSource[i][j] in color2id));
-      if(!(rawSource[i][j] in color2id))
+      source[n][i] = [];
+      for(var j = 0; j < rawSource[n][i].length; j++)
       {
-        color2id[rawSource[i][j]] = Object.keys(color2id).length;
-        id2color[Object.keys(color2id).length-1] = rawSource[i][j];
+        count++;
+        //console.log(rawSource[i][j]);
+        //console.log(!(rawSource[i][j] in color2id));
+        if(!(rawSource[n][i][j] in color2id))
+        {
+          color2id[rawSource[n][i][j]] = Object.keys(color2id).length;
+          id2color[Object.keys(color2id).length-1] = rawSource[n][i][j];
 
-        id2weight[color2id[rawSource[i][j]]] = 1;
+          id2weight[color2id[rawSource[n][i][j]]] = 1;
+        }
+        else
+          id2weight[color2id[rawSource[n][i][j]]]++;
+        source[n][i][j] = color2id[rawSource[n][i][j]];
       }
-      else
-        id2weight[color2id[rawSource[i][j]]]++;
-      source[i][j] = color2id[rawSource[i][j]];
     }
   }
   numTiles = Object.keys(id2weight).length;
   for(var i = 0; i < numTiles; i++)
-    id2weight[i] /= rawSource.length*rawSource[0].length;
+    id2weight[i] /= count;
 }
 function initMap()
 {
