@@ -11,7 +11,7 @@
   <script type="text/javascript">
 
     var ctx;
-    var fps = 60;
+    var fps = 30;
     var updateLoop;
     var canvasH;
     var canvasW;
@@ -23,12 +23,28 @@
     var mouse = false;
     var mouseX;
     var mouseY;
-    var size = {x : 0, y : 0, px : 30};
+    var size = {x : 0, y : 0, px : 60};
 
     var c1 = "#AA00AA";
     var c2 = "#999999";
     var c3 = "#333333";
-    var rawSource = [
+
+  /*  var rawSource = [
+
+                    [[c2, c2],
+                    [c3, c3]]
+
+                  ];*/
+    /*var rawSource = [
+
+                    [[c3, c3, c3, c3, c3],
+                    [c3, c1, c1, c1, c3],
+                    [c3, c1, c2, c1, c3],
+                    [c3, c1, c1, c1, c3],
+                    [c3, c3, c3, c3, c3]]
+
+                    ];*/
+    /*var rawSource = [
 
                     [[c3, c3, c3, c3],
                     [c3, c1, c1, c3],
@@ -41,11 +57,11 @@
                     [c3, c3, c3, c3]]
 
                     ];
+                    */
 
     /*var rawSource = [[c1, c1, c1, c1],
                     [c2, c2, c2, c2],
-                    [c3, c3, c3, c3],
-                    [c2, c2, c2, c2]];*/
+                    [c3, c3, c3, c3]];*/
 
     document.onkeydown =
     function mRect(e)

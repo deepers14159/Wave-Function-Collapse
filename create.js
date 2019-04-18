@@ -10,8 +10,19 @@ function update()
   {
     updateOnePixel();
     //console.log("running...");
+    //updateMap();
   }
   draw();
+}
+function updateMap()
+{
+  for(var i = 0; i<size.x; i++)
+  {
+    for(var j = 0; j<size.y; j++)
+    {
+        updateTile(getCoord(i,j));
+    }
+  }
 }
 function runChecks()
 {
@@ -26,6 +37,7 @@ function runChecks()
         clearInterval(updateLoop);
         finished = true;
         console.log("EXCEPTION");
+        console.log(map[i][j]);
       }
     }
   }
@@ -56,6 +68,11 @@ function collaspe(coord)
 
   map[coord.x][coord.y].checkSet();
 
+//for(var i = 0; i < 10; i++)
+  for(var direction = 0; direction < 8; direction ++)
+    updateTile(getMovedCoord(coord, direction));
+//UPDATE MAP
+/*
   var uc = getMovedCoord(coord, UP);
   map[uc.x][uc.y].updateDist(rules[UP][realVal]);
   uc = getMovedCoord(coord, DOWN);
@@ -64,83 +81,40 @@ function collaspe(coord)
   map[uc.x][uc.y].updateDist(rules[LEFT][realVal])
   uc = getMovedCoord(coord, RIGHT);
   map[uc.x][uc.y].updateDist(rules[RIGHT][realVal])
-
-/*
-  mapSet[coord.x][coord.y] = true;
-
-  upspot = [];
-  downspot = [];
-  rightspot = [];
-  leftspot = [];
-
-  for(var i = 0; i < numTiles; i++)
-  {
-    upspot[i] = false;
-    downspot[i] = false;
-    rightspot[i] = false;
-    leftspot[i] = false;
-  }
-
-  for(rule in rules)
-  {
-    if(rules[rule].direction == UP && rules[rule].a == realVal)
-      upspot[rules[rule].b] = true;
-    if(rules[rule].direction == DOWN && rules[rule].a == realVal)
-      downspot[rules[rule].b] = true;
-    if(rules[rule].direction == RIGHT && rules[rule].a == realVal)
-      rightspot[rules[rule].b] = true;
-    if(rules[rule].direction == LEFT && rules[rule].a == realVal)
-      leftspot[rules[rule].b] = true;
-  }
-
-  for(var i = 0; i < numTiles; i++)
-  {
-    if(upspot[i] == false)
-      setMap(getMovedCoord(coord, UP), i, false);
-    if(downspot[i] == false)
-      setMap(getMovedCoord(coord, DOWN), i, false);
-    if(rightspot[i] == false)
-      setMap(getMovedCoord(coord, RIGHT), i, false);
-    if(leftspot[i] == false)
-      setMap(getMovedCoord(coord, LEFT), i, false);
-  }
-
-  var upcount = 0;
-  var downcount = 0;
-  var rightcount = 0;
-  var leftcount = 0;
-
-  for(var i = 0; i < numTiles; i++)
-  {
-    if(getMap(getMovedCoord(coord, UP), i) == true)
-      upcount++;
-    if(getMap(getMovedCoord(coord, DOWN), i) == true)
-      downcount++;
-    if(getMap(getMovedCoord(coord, RIGHT), i) == true)
-      rightcount++;
-    if(getMap(getMovedCoord(coord, LEFT), i) == true)
-      leftcount++;
-  }
-
-  if(upcount == 1)
-    mapSet[getMovedCoord(coord, UP).x][getMovedCoord(coord, UP).y] = true;
-  if(downcount == 1)
-    mapSet[getMovedCoord(coord, DOWN).x][getMovedCoord(coord, DOWN).y] = true;
-  if(rightcount == 1)
-    mapSet[getMovedCoord(coord, RIGHT).x][getMovedCoord(coord, RIGHT).y] = true;
-  if(leftcount == 1)
-    mapSet[getMovedCoord(coord, LEFT).x][getMovedCoord(coord, LEFT).y] = true;
-
-  if(upcount == 0 || downcount == 0 || leftcount == 0 || rightcount == 0)
-  {
-    console.log("CONTRADICTION");
+*/
+}
+function updateTile(coord)
+{
+  if(map[coord.x][coord.y].set)
     return;
+  for(var i = 0; i < numTiles; i++)
+    map[coord.x][coord.y].dist[i] = 0;
+
+  var color;
+  var product;
+  var tile;
+  for(var i = 0; i < rules.length; i++)
+  {
+    color = rules[i].color;
+    product = 1;
+    for(var direction = 0; direction < 8; direction++)
+    {
+      tile = getMovedCoord(coord, direction);
+      product *= map[tile.x][tile.y].dist[rules[i].form[direction]];
+    }
+    map[coord.x][coord.y].dist[color] += product * rules[i].freq;
   }
 
-  original = [false, true, true, false] //false is already taken count
-  newc = [false, true, true] // set org array to false, make all the rules to true
-  //take the union of the falses
-  */
+  var mag = 0;
+  for(var i = 0; i < numTiles; i++)
+    mag += map[coord.x][coord.y].dist[i] * map[coord.x][coord.y].dist[i];
+
+  mag = Math.sqrt(mag);
+  if(floatEquals(mag, 0, 1e-40))
+    return;
+
+  for(var i = 0; i < numTiles; i++)
+    map[coord.x][coord.y].dist[i] /= mag;
 }
 function getLowestEntropy()
 {

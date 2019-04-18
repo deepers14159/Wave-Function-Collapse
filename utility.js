@@ -2,6 +2,10 @@ const UP = 0;
 const DOWN = 1;
 const LEFT = 2;
 const RIGHT = 3;
+const UPLEFT = 4;
+const UPRIGHT = 5;
+const DOWNRIGHT = 6;
+const DOWNLEFT = 7;
 
 var map = [];
 var mapSet = [];
@@ -15,6 +19,20 @@ var rules = [];
 
 var numTiles = 0;
 
+
+//RULES
+class Rule
+{
+  color;
+  form = [];
+  freq;
+  asString;
+  constructor(color)
+  {
+    this.color = color;
+    this.freq = 1;
+  }
+}
 //GENERAL
 function floatEquals(x, y, error)
 {
@@ -86,25 +104,25 @@ function getCoord(i, j)
 function getMovedCoord(coord, direction)
 {
   tempCoord = {x : coord.x, y : coord.y};
-  if(direction == UP)
+  if(direction == UP || direction == UPLEFT || direction == UPRIGHT)
       {
           tempCoord.x-=1;
           tempCoord.x+=size.x;
           tempCoord.x%=size.x;
       }
-  if(direction == DOWN)
+  if(direction == DOWN || direction == DOWNLEFT || direction == DOWNRIGHT)
       {
           tempCoord.x+=1;
           tempCoord.x+=size.x;
           tempCoord.x%=size.x;
       }
-  if(direction == LEFT)
+  if(direction == LEFT || direction == UPLEFT || direction == DOWNLEFT)
       {
           tempCoord.y+=1;
           tempCoord.y+=size.y;
           tempCoord.y%=size.y;
       }
-  if(direction == RIGHT)
+  if(direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT)
       {
           tempCoord.y-=1;
           tempCoord.y+=size.y;
@@ -136,25 +154,25 @@ function getMap(coord, id)
 function getMovedCoordSource(n, coord, direction)
 {
   tempCoord = {x : coord.x, y : coord.y};
-  if(direction == UP)
+  if(direction == UP || direction == UPLEFT || direction == UPRIGHT)
       {
           tempCoord.x-=1;
           tempCoord.x+=source[n].length;
           tempCoord.x%=source[n].length;
       }
-  if(direction == DOWN)
+  if(direction == DOWN || direction == DOWNLEFT || direction == DOWNRIGHT)
       {
           tempCoord.x+=1;
           tempCoord.x+=source[n].length;
           tempCoord.x%=source[n].length;
       }
-  if(direction == LEFT)
+  if(direction == LEFT || direction == UPLEFT || direction == DOWNLEFT)
       {
           tempCoord.y+=1;
           tempCoord.y+=source[n][0].length;
           tempCoord.y%=source[n][0].length;
       }
-  if(direction == RIGHT)
+  if(direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT)
       {
           tempCoord.y-=1;
           tempCoord.y+=source[n][0].length;
@@ -162,10 +180,10 @@ function getMovedCoordSource(n, coord, direction)
       }
   return tempCoord;
 }
-function isVaidSource(coord)
+function isVaidSource(n, coord)
 {
-  if(coord.x >= 0 && coord.x < source.length)
-    if(coord.y >= 0 && coord.y < source[0].length)
+  if(coord.x >= 0 && coord.x < source[n].length)
+    if(coord.y >= 0 && coord.y < source[n][0].length)
       return true;
   return false;
 }

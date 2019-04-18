@@ -7,58 +7,33 @@ function init()
 function initRules()
 {
   rules = [];
-  for(var i = 0; i < 4; i++)
-  {
-    rules[i] = [];
-    for(var j = 0; j < numTiles; j++)
-    {
-      rules[i][j] = [];
-      for(var k = 0; k < numTiles; k++)
-      {
-        rules[i][j][k] = 0;
-      }
-    }
-  }
+  var tempRuleStringDict = {};
+  var tempString;
+  var ruleCount = 0;
   for(var n = 0; n < source.length; n++)
   {
     for(var i = 0; i < source[n].length; i++)
     {
       for(var j = 0; j < source[n][i].length; j++)
       {
-        /*
-        for(var r = 0; r < 4; r++)
+        tempString = "" + getSource(n, getCoord(i , j));
+        for(var direction = 0; direction < 8; direction++)
+          tempString += "" + getSource(n, getMovedCoordSource(n, getCoord(i, j), direction));
+
+        if(tempString in tempRuleStringDict)
         {
-          rules[UP][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
-          rules[DOWN][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
-          rules[LEFT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
-          rules[RIGHT][getSource(getCoord(i,j))][getSource(getMovedCoordSource(getCoord(i, j), r))]++;
+          rules[tempRuleStringDict[tempString]].freq++;
         }
-        */
-        rules[UP][getSource(n, getCoord(i,j))][getSource(n, getMovedCoordSource(n, getCoord(i, j), UP))]++;
-        rules[DOWN][getSource(n, getCoord(i,j))][getSource(n, getMovedCoordSource(n, getCoord(i, j), DOWN))]++;
-        rules[LEFT][getSource(n, getCoord(i,j))][getSource(n, getMovedCoordSource(n, getCoord(i, j), LEFT))]++;
-        rules[RIGHT][getSource(n, getCoord(i,j))][getSource(n, getMovedCoordSource(n, getCoord(i, j), RIGHT))]++;
-      }
-    }
-  }
-  var count;
-  for(var i = 0; i < 4; i++)
-  {
-    for(var j = 0; j < numTiles; j++)
-    {
-      count = 0;
-      for(var k = 0; k < numTiles; k++)
-      {
-        count += rules[i][j][k];
-      }
-      if(count == 0)
-      {
-        console.log("RULE FAIL - There is a color with no surrounding tiles.");
-        continue;
-      }
-      for(var k = 0; k < numTiles; k++)
-      {
-        rules[i][j][k] /= count;
+        else
+        {
+          rules[ruleCount] = new Rule(getSource(n, getCoord(i , j)));
+          rules[ruleCount].asString = tempString;
+          for(var direction = 0; direction < 8; direction++)
+            rules[ruleCount].form[direction] = getSource(n, getMovedCoordSource(n, getCoord(i, j), direction));
+          tempRuleStringDict[tempString] = ruleCount;
+          ruleCount++;
+        }
+        console.log(tempString);
       }
     }
   }

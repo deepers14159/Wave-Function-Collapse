@@ -31,8 +31,8 @@ function drawWorld()
       ctx.font = '15px Verdana';
       ctx.fillStyle = "#FFFFFF";
       //if(Math.round(mouseX/size.px) == i && Math.round(mouseY/size.px) == j)
-      //ctx.fillText(i + " " + j, i*size.px + 5, j*size.px + size.px/2 - 5);
-      //ctx.fillText(map[i][j].getEntropy(), i*size.px + 5, j*size.px + size.px/2 + 15);
+      ctx.fillText(i + " " + j, i*size.px + 5, j*size.px + size.px/2 - 5);
+      ctx.fillText(map[i][j].getEntropy(), i*size.px + 5, j*size.px + size.px/2 + 15);
 
     }
   }

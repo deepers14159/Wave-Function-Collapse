@@ -20,7 +20,7 @@ class Tile
     if(this.set)
       return;
     for(var i = 0; i < numTiles; i++)
-      if(floatEquals(cond[i], 0, 0.00001))
+      if(floatEquals(cond[i], 0, 1e-30))
         this.dist[i] = 0;
       //this.dist[i] *= cond[i];
   }
@@ -55,7 +55,7 @@ class Tile
     var realVal;
     for(var i = 0; i < numTiles; i++)
     {
-      if(!floatEquals(this.dist[i], 0, 0.00001))
+      if(!floatEquals(this.dist[i], 0, 1e-30))
       {
         realVal = i;
         count++;
@@ -75,7 +75,7 @@ class Tile
     var count = 0;
     for(var i = 0; i < numTiles; i++)
     {
-      if(!floatEquals(this.dist[i], 0, 0.00001))
+      if(!floatEquals(this.dist[i], 0, 1e-30))
         count++;
     }
 
